@@ -19,13 +19,11 @@ public class Idea extends BaseEntity{
 
     private Long userId;
 
-
     /**
      * 아이디어 제목, 아이디어 내용, 아이디어 요구사항
      */
-
     private String title;
     private String content;
-    private String purpose;
+    private String purpose; //브레인스토밍 프로세스 Q1의 답변을 저장하는 용도
 
 }
