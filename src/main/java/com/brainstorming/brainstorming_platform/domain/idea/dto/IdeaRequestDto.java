@@ -2,12 +2,12 @@ package com.brainstorming.brainstorming_platform.domain.idea.dto;
 
 import com.brainstorming.brainstorming_platform.domain.idea.entity.Idea;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
+@Data
 public class IdeaRequestDto {
     private Long userId;
     private String title;
