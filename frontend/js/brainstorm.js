@@ -3,7 +3,7 @@
 // ========================================
 
 // 설정
-const API_BASE_URL = 'http://localhost:8000/api/v1/brainstorming';
+const API_BASE_URL = '/api/v1/brainstorming';
 
 // 전역 변수
 let sessionId = null;
