@@ -39,7 +39,7 @@ async function checkLoginStatus() {
     
     try {
         // 토큰 유효성 검증
-        const response = await fetch('http://localhost:8080/api/auth/me', {
+        const response = await fetch('/api/auth/me', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -140,7 +140,7 @@ async function submitInquiry() {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch('http://localhost:8080/api/inquiries', {
+        const response = await fetch('/api/inquiries', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -173,7 +173,7 @@ async function loadMyIdeas(userId) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/ideas?userId=${userId}`, {
+        const response = await fetch(`/api/ideas?userId=${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -243,7 +243,7 @@ async function deleteIdea(ideaId, event) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/ideas/${ideaId}`, {
+        const response = await fetch(`/api/ideas/${ideaId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -287,7 +287,7 @@ async function showIdeaDetail(ideaId) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/ideas/${ideaId}`, {
+        const response = await fetch(`/api/ideas/${ideaId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

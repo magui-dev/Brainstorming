@@ -58,10 +58,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         
         if (userId == null || email == null) {
             log.error("사용자 정보 없음 - userId: {}, email: {}", userId, email);
+            
+            // 동적 Base URL 생성
+            String baseUrl = getBaseUrl(request);
+            
             getRedirectStrategy().sendRedirect(
                     request,
                     response,
-                    "http://localhost:8080/index.html?error=user_info_required"
+                    baseUrl + "/index.html?error=user_info_required"
             );
             return;
         }
@@ -88,8 +92,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         /**
          * 5 . 프론트로 리다이렉트(토큰포함)
          */
+        // 동적 Base URL 생성
+        String baseUrl = getBaseUrl(request);
+        
         String targetUrl = UriComponentsBuilder
-                .fromUriString("http://localhost:8080/oauth-callback.html")
+                .fromUriString(baseUrl + "/oauth-callback.html")
                 .queryParam("token", token)
                 .build()
                 .toUriString();
@@ -100,5 +107,22 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
         log.info("OAuth 로그인 처리 완료");
+    }
+    
+    /**
+     * 동적으로 Base URL 생성 (프로토콜://도메인:포트)
+     */
+    private String getBaseUrl(HttpServletRequest request) {
+        String scheme = request.getScheme(); // http 또는 https
+        String serverName = request.getServerName(); // idea-brainstorm.duckdns.org
+        int serverPort = request.getServerPort(); // 80
+        
+        // 포트가 기본 포트(80, 443)면 생략
+        if ((scheme.equals("http") && serverPort == 80) || 
+            (scheme.equals("https") && serverPort == 443)) {
+            return scheme + "://" + serverName;
+        } else {
+            return scheme + "://" + serverName + ":" + serverPort;
+        }
     }
 }

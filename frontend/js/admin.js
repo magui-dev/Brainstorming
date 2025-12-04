@@ -34,7 +34,7 @@ async function checkAdminAuth() {
     }
     
     try {
-        const response = await fetch('http://localhost:8080/api/auth/me', {
+        const response = await fetch('/api/auth/me', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -78,7 +78,7 @@ async function loadAllInquiries() {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch('http://localhost:8080/api/inquiries/admin/all', {
+        const response = await fetch('/api/inquiries/admin/all', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -203,7 +203,7 @@ async function showInquiryDetail(inquiryId) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/inquiries/${inquiryId}`, {
+        const response = await fetch(`/api/inquiries/${inquiryId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -291,7 +291,7 @@ async function submitReply(inquiryId) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/inquiries/${inquiryId}/reply`, {
+        const response = await fetch(`/api/inquiries/${inquiryId}/reply`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,

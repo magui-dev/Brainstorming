@@ -570,7 +570,7 @@ async function saveIdeas() {
     
     // 2. 사용자 정보 가져오기
     try {
-        const userResponse = await fetch('http://localhost:8080/api/auth/me', {
+        const userResponse = await fetch('/api/auth/me', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -603,7 +603,7 @@ async function saveIdeas() {
                 purpose: sessionId || 'brainstorm_session'
             };
             
-            const response = await fetch('http://localhost:8080/api/ideas', {
+            const response = await fetch('/api/ideas', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

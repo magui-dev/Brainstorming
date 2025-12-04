@@ -37,7 +37,7 @@ async function checkLoginStatus() {
     }
     
     try {
-        const response = await fetch('http://localhost:8080/api/auth/me', {
+        const response = await fetch('/api/auth/me', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -94,7 +94,7 @@ async function loadInquiries() {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/inquiries?userId=${currentUser.userId}`, {
+        const response = await fetch(`/api/inquiries?userId=${currentUser.userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -185,7 +185,7 @@ async function handleSubmit(e) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch('http://localhost:8080/api/inquiries', {
+        const response = await fetch('/api/inquiries', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -223,7 +223,7 @@ async function showDetailModal(inquiryId) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/inquiries/${inquiryId}`, {
+        const response = await fetch(`/api/inquiries/${inquiryId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -321,7 +321,7 @@ async function editInquiry(inquiryId) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/inquiries/${inquiryId}`, {
+        const response = await fetch(`/api/inquiries/${inquiryId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -355,7 +355,7 @@ async function deleteInquiry(inquiryId) {
     const token = localStorage.getItem('token');
     
     try {
-        const response = await fetch(`http://localhost:8080/api/inquiries/${inquiryId}`, {
+        const response = await fetch(`/api/inquiries/${inquiryId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
