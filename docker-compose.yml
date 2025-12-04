@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # MySQL 데이터베이스
+  mysql:
+    image: mysql:8.0
+    container_name: brainstorm-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: brainstorm
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - brainstorm-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Python FastAPI
+  python-service:
+    build:
+      context: ./python-service
+      dockerfile: Dockerfile
+    container_name: brainstorm-python
+    restart: always
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-3-large}
+    ports:
+      - "8000:8000"
+    networks:
+      - brainstorm-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Spring Boot
+  spring-boot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: brainstorm-spring
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      python-service:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/brainstorm?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
+      - KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET}
+      - NAVER_CLIENT_ID=${NAVER_CLIENT_ID}
+      - NAVER_CLIENT_SECRET=${NAVER_CLIENT_SECRET}
+      - PYTHON_API_URL=http://python-service:8000
+    ports:
+      - "8080:8080"
+    networks:
+      - brainstorm-network
+
+# 데이터 저장용 볼륨
+volumes:
+  mysql-data:
+    driver: local
+
+# 컨테이너 간 통신용 네트워크
+networks:
+  brainstorm-network:
+    driver: bridge

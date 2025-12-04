@@ -37,9 +37,9 @@ out/
 .vscode/
 
 
-# Python service env 파일은 버전관리 안 함
+# 환경 변수 파일 (민감 정보 포함)
+.env
 python-service/.env
-
 
 ##application.yaml
 application.yaml
