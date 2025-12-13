@@ -72,9 +72,29 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - ADMIN_USERNAME=${ADMIN_USERNAME}
     ports:
-      - "8080:8080"  # Caddy가 이 포트로 reverse_proxy 합니다
+      - "8080:8080"
     networks:
       - brainstorm-network
+
+  # Nginx (AWS 전용)
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: brainstorm-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      spring-boot:
+        condition: service_started
+      python-service:
+        condition: service_healthy
+    networks:
+      - brainstorm-network
+    restart: always
 
 # 데이터 저장용 볼륨
 volumes:
