@@ -20,7 +20,7 @@ body {
 .navbar {
     background: #ffffff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 1rem 0;
+    padding: 1rem 0;    /* 0.8rem → 1rem (헤더도 약간 키움) */
     position: sticky;
     top: 0;
     z-index: 100;
@@ -46,6 +46,12 @@ body {
 
 .logo-icon {
     font-size: 2rem;
+}
+
+.logo-image {
+    height: 50px;    /* 60px → 50px */
+    width: auto;
+    object-fit: contain;
 }
 
 .nav-menu {
@@ -161,14 +167,14 @@ body {
 }
 
 .main-title {
-    font-size: 3.5rem;
+    font-size: 3.5rem;    /* 8.75rem → 3.5rem (원래대로) */
     color: #2c3e50;
     margin-bottom: 0.5rem;
     font-weight: 700;
 }
 
 .main-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.2rem;        /* 3rem → 1.2rem (원래대로) */
     color: #7f8c8d;
     font-weight: 300;
 }
