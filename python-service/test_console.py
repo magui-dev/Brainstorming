@@ -145,17 +145,20 @@ def test_brainstorming():
 - SWOT: [간단한 분석]
 """
         
-        response = openai_client.chat.completions.create(
+        response = openai_client.responses.create(
             model=llm_model,
-            messages=[
+            input=[
                 {"role": "system", "content": "당신은 유능한 기획자입니다."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.7,
-            max_tokens=1500
+            text={
+                "verbosity": "medium",
+                "reasoning_effort": "minimal"
+            },
+            max_output_tokens=1500
         )
         
-        ideas_text = response.choices[0].message.content.strip()
+        ideas_text = response.output_text.strip()
         
         print("\n" + "="*60)
         print("🎉 생성된 아이디어:")

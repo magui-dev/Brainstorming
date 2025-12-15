@@ -411,8 +411,8 @@ function displayIdeas(ideas) {
             <button 
                 class="save-ideas-button" 
                 onclick="saveIdeas()" 
-                style="padding: 1.2rem 3rem; font-size: 1.2rem; font-weight: 600; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s;"
-                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)'"
+                style="padding: 1.2rem 3rem; font-size: 1.2rem; font-weight: 600; color: white; background: #759999; border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(117, 153, 153, 0.4)'"
                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
             >
                 💾 아이디어 저장하기

@@ -93,14 +93,19 @@ class DuckDuckGoSearcher:
 
 영어 검색어:"""
 
-        translate_response = await self.openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": translate_prompt}],
-            temperature=0.3,
-            max_tokens=30
+        translate_response = await self.openai.responses.create(
+            model="gpt-5-mini",
+            input=[{"role": "user", "content": translate_prompt}],
+            text={
+                "verbosity": "low"
+            },
+            reasoning={
+                "effort": "minimal"
+            },
+            max_output_tokens=30
         )
         
-        english_query = translate_response.choices[0].message.content.strip()
+        english_query = translate_response.output_text.strip()
         search_query = f"{english_query} trend 2024"
         
         # 2. 뉴스 검색
@@ -134,15 +139,20 @@ class DuckDuckGoSearcher:
 
 키워드:"""
 
-        response = await self.openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,
-            max_tokens=200
+        response = await self.openai.responses.create(
+            model="gpt-5-mini",
+            input=[{"role": "user", "content": prompt}],
+            text={
+                "verbosity": "low"
+            },
+            reasoning={
+                "effort": "minimal"
+            },
+            max_output_tokens=200
         )
         
         # 5. 키워드 파싱
-        keywords_text = response.choices[0].message.content.strip()
+        keywords_text = response.output_text.strip()
         keywords = [k.strip() for k in keywords_text.split(",") if k.strip()]
         
         return keywords

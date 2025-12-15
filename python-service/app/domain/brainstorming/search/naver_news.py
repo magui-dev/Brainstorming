@@ -93,14 +93,19 @@ class NaverNewsSearcher:
 
 키워드:"""
 
-        refine_response = await self.openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": refine_prompt}],
-            temperature=0.3,
-            max_tokens=50
+        refine_response = await self.openai.responses.create(
+            model="gpt-5-mini",
+            input=[{"role": "user", "content": refine_prompt}],
+            text={
+                "verbosity": "low"
+            },
+            reasoning={
+                "effort": "minimal"
+            },
+            max_output_tokens=50
         )
         
-        refined_query = refine_response.choices[0].message.content.strip()
+        refined_query = refine_response.output_text.strip()
         # 첫 번째 키워드만 사용 (가장 핵심)
         main_keyword = refined_query.split(",")[0].strip()
         
@@ -139,15 +144,20 @@ class NaverNewsSearcher:
 
 키워드:"""
 
-        response = await self.openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,
-            max_tokens=200
+        response = await self.openai.responses.create(
+            model="gpt-5-mini",
+            input=[{"role": "user", "content": prompt}],
+            text={
+                "verbosity": "low"
+            },
+            reasoning={
+                "effort": "minimal"
+            },
+            max_output_tokens=200
         )
         
         # 4. 키워드 파싱
-        keywords_text = response.choices[0].message.content.strip()
+        keywords_text = response.output_text.strip()
         keywords = [k.strip() for k in keywords_text.split(",") if k.strip()]
         
         return keywords

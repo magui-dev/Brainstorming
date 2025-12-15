@@ -107,14 +107,19 @@ class NaverDataLabSearcher:
 
 키워드:"""
 
-        expand_response = await self.openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": expand_prompt}],
-            temperature=0.7,
-            max_tokens=100
+        expand_response = await self.openai.responses.create(
+            model="gpt-5-mini",
+            input=[{"role": "user", "content": expand_prompt}],
+            text={
+                "verbosity": "low"
+            },
+            reasoning={
+                "effort": "minimal"
+            },
+            max_output_tokens=100
         )
         
-        keywords_text = expand_response.choices[0].message.content.strip()
+        keywords_text = expand_response.output_text.strip()
         keywords = [k.strip() for k in keywords_text.split(",") if k.strip()][:5]
         
         if not keywords:
@@ -171,14 +176,19 @@ class NaverDataLabSearcher:
 
 추가 키워드:"""
 
-        related_response = await self.openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": related_prompt}],
-            temperature=0.7,
-            max_tokens=100
+        related_response = await self.openai.responses.create(
+            model="gpt-5-mini",
+            input=[{"role": "user", "content": related_prompt}],
+            text={
+                "verbosity": "low"
+            },
+            reasoning={
+                "effort": "minimal"
+            },
+            max_output_tokens=100
         )
         
-        related_text = related_response.choices[0].message.content.strip()
+        related_text = related_response.output_text.strip()
         related_keywords = [k.strip() for k in related_text.split(",") if k.strip()]
         
         # 합치고 중복 제거

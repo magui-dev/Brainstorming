@@ -277,17 +277,20 @@ class IdeaGenerator:
 각 질문은 번호를 붙여 한 줄로 작성해주세요."""
 
         try:
-            response = self.openai_client.chat.completions.create(
+            response = self.openai_client.responses.create(
                 model=self.llm_model,
-                messages=[
+                input=[
                     {"role": "system", "content": "당신은 유능한 기획자입니다. 사용자의 직군에 맞는 구체적이고 실용적인 질문을 던집니다."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.8,
-                max_tokens=400
+                text={
+                    "verbosity": "medium",
+                    "reasoning_effort": "minimal"
+                },
+                max_output_tokens=400
             )
             
-            warmup_text = response.choices[0].message.content.strip()
+            warmup_text = response.output_text.strip()
             
             # 질문 파싱 (번호 기반)
             warmup_questions = []
@@ -639,17 +642,20 @@ class IdeaGenerator:
 **⚠️ 반드시 위 형식으로 3개 모두 작성하세요!**"""
 
         try:
-            response = self.openai_client.chat.completions.create(
+            response = self.openai_client.responses.create(
                 model=self.llm_model,
-                messages=[
+                input=[
                     {"role": "system", "content": "당신은 현실적인 기획자입니다. 허구의 통계나 비용을 절대 지어내지 않으며, 사용자가 가진 자원과 역량으로 빠르게 시작 가능한 아이디어를 제안합니다. 거창한 전략이 아닌, 구체적으로 실행 가능한 행동 위주로 설명합니다."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.7,
-                max_tokens=2000
+                text={
+                    "verbosity": "medium",
+                    "reasoning_effort": "minimal"
+                },
+                max_output_tokens=2000
             )
             
-            ideas_text = response.choices[0].message.content.strip()
+            ideas_text = response.output_text.strip()
             
             # 아이디어 파싱
             ideas = self._parse_ideas(ideas_text)
@@ -827,17 +833,20 @@ class IdeaGenerator:
 위협: 다른 학원도 비슷한 이벤트 많이 함. 플랫폼 알고리즘 바뀌면 노출 줄어들 수 있음."""
 
         try:
-            response = self.openai_client.chat.completions.create(
+            response = self.openai_client.responses.create(
                 model=self.llm_model,
-                messages=[
+                input=[
                     {"role": "system", "content": "당신은 현실적인 기획자입니다. SWOT 분석은 짧고 간결하게, 각 항목당 1-2줄로 핵심만 작성합니다. 강점/약점/기회/위협 4가지를 반드시 모두 작성해야 합니다."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.6,
-                max_tokens=500
+                text={
+                    "verbosity": "low",
+                    "reasoning_effort": "minimal"
+                },
+                max_output_tokens=500
             )
             
-            analysis_text = response.choices[0].message.content.strip()
+            analysis_text = response.output_text.strip()
             
             # SWOT 파싱 (개선)
             swot = {
@@ -1130,16 +1139,19 @@ class IdeaGenerator:
 ---"""
 
         try:
-            response = self.openai_client.chat.completions.create(
+            response = self.openai_client.responses.create(
                 model=self.llm_model,
-                messages=[
+                input=[
                     {"role": "system", "content": "당신은 현실적인 기획자입니다. 허구의 통계나 비용을 절대 지어내지 않습니다."},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.7,
-                max_tokens=2000
+                text={
+                    "verbosity": "medium",
+                    "reasoning_effort": "minimal"
+                },
+                max_output_tokens=2000
             )
-            ideas_text = response.choices[0].message.content.strip()
+            ideas_text = response.output_text.strip()
             return self._parse_ideas_for_api(ideas_text)
         except Exception as e:
             print(f"[API] 아이디어 생성 실패: {e}")

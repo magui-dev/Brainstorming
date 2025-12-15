@@ -182,17 +182,20 @@ class BrainstormingService:
 
 친근하고 실용적인 톤으로 답변해주세요."""
 
-        response = self.openai_client.chat.completions.create(
+        response = self.openai_client.responses.create(
             model=settings.LLM_MODEL,
-            messages=[
+            input=[
                 {"role": "system", "content": "당신은 브레인스토밍과 창의적 사고 전문가입니다."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=settings.LLM_TEMPERATURE,
-            max_tokens=settings.LLM_MAX_TOKENS
+            text={
+                "verbosity": "medium",
+                "reasoning_effort": "minimal"
+            },
+            max_output_tokens=settings.LLM_MAX_TOKENS
         )
         
-        suggestions = response.choices[0].message.content
+        suggestions = response.output_text
         
         # 4. 결과 반환
         return {

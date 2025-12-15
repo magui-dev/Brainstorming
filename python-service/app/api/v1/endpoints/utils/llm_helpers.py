@@ -37,8 +37,9 @@ def call_llm_with_retry(
     client: OpenAI,
     model: str,
     messages: list,
-    temperature: float = 0.7,
-    max_tokens: int = 2000,
+    verbosity: str = "medium",
+    reasoning_effort: str = "minimal",
+    max_output_tokens: int = 2000,
     max_retries: int = 3,
     **kwargs
 ) -> Optional[str]:
@@ -49,8 +50,9 @@ def call_llm_with_retry(
         client: OpenAI 클라이언트
         model: 모델 이름
         messages: 메시지 리스트
-        temperature: 온도
-        max_tokens: 최대 토큰
+        verbosity: 상세도 (low, medium, high)
+        reasoning_effort: 추론 강도 (minimal, low, medium, high)
+        max_output_tokens: 최대 출력 토큰
         max_retries: 최대 재시도 횟수
         **kwargs: 추가 파라미터
         
@@ -66,15 +68,20 @@ def call_llm_with_retry(
         try:
             logger.info(f"LLM 호출 시도 {attempt + 1}/{max_retries}")
             
-            response = client.chat.completions.create(
+            response = client.responses.create(
                 model=model,
-                messages=messages,
-                temperature=temperature,
-                max_tokens=max_tokens,
+                input=messages,
+                text={
+                    "verbosity": verbosity
+                },
+                reasoning={
+                    "effort": reasoning_effort
+                },
+                max_output_tokens=max_output_tokens,
                 **kwargs
             )
             
-            content = response.choices[0].message.content.strip()
+            content = response.output_text.strip()
             
             if not content:
                 raise ValueError("LLM 응답이 비어있습니다")

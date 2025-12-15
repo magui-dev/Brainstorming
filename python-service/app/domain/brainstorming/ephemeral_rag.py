@@ -114,9 +114,15 @@ class EphemeralRAG:
             bool: 성공 여부
         """
         try:
-            for association in associations:
-                # 임베딩 생성
-                embedding = self.embed_text(association)
+            # 🔥 배치 임베딩 (한 번에!)
+            response = self.openai_client.embeddings.create(
+                model=self.embedding_model,
+                input=associations  # 리스트 전체를 한 번에!
+            )
+            
+            # 결과를 순서대로 저장
+            for i, association in enumerate(associations):
+                embedding = response.data[i].embedding
                 
                 self.data["associations"].append({
                     "text": association,
@@ -268,19 +274,25 @@ class EphemeralRAG:
         user_embeddings = [item["embedding"] for item in self.data["associations"]]
         avg_user_embedding = np.mean(user_embeddings, axis=0).tolist()
         
-        # 2. 각 트렌드 키워드와 사용자 기준점 간 유사도 계산
+        # 2. 트렌드 키워드들을 배치로 임베딩
+        try:
+            response = self.openai_client.embeddings.create(
+                model=self.embedding_model,
+                input=trend_keywords  # 🔥 한 번에!
+            )
+            trend_embeddings = [item.embedding for item in response.data]
+        except Exception as e:
+            print(f"❌ 트렌드 키워드 배치 임베딩 실패: {e}")
+            return trend_keywords[:top_k]
+        
+        # 3. 각 트렌드 키워드와 사용자 기준점 간 유사도 계산
         trend_scores = []
-        for trend_kw in trend_keywords:
-            try:
-                trend_embedding = self.embed_text(trend_kw)
-                similarity = self._cosine_similarity(avg_user_embedding, trend_embedding)
-                trend_scores.append({
-                    "keyword": trend_kw,
-                    "similarity": similarity
-                })
-            except Exception as e:
-                print(f"⚠️ 트렌드 키워드 임베딩 실패: {trend_kw} - {e}")
-                continue
+        for i, trend_kw in enumerate(trend_keywords):
+            similarity = self._cosine_similarity(avg_user_embedding, trend_embeddings[i])
+            trend_scores.append({
+                "keyword": trend_kw,
+                "similarity": similarity
+            })
         
         # 3. 유사도 기준 정렬 후 상위 k개 선별
         trend_scores.sort(key=lambda x: x["similarity"], reverse=True)
