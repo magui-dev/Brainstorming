@@ -72,7 +72,7 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - ADMIN_USERNAME=${ADMIN_USERNAME}
     ports:
-      - "8080:8080"  # Caddy가 이 포트로 reverse_proxy
+      - "8081:8080"  # Caddy가 이 포트로 reverse_proxy
     networks:
       - brainstorm-network
 
